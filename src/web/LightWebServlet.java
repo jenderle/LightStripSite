@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import transfer.AnimationSequence;
+
 /**
  * Servlet implementation class WebServlet
  */
@@ -38,7 +40,13 @@ public class LightWebServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// doGet(request, response);
-		System.out.println(request.getReader().lines().collect(Collectors.joining()));
+		String jsonResponse = request.getReader().lines().collect(Collectors.joining());
+		System.out.println(jsonResponse);
+		try {
+			AnimationSequence testSequence = new AnimationSequence(jsonResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
