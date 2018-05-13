@@ -18,8 +18,8 @@ public class AnimationItem {
 	
 	public AnimationItem(String hexColor, int displayTime, int transferTime, String transitionType) throws Exception {
         red = Integer.valueOf( hexColor.substring( 1, 3 ), 16 );
-        blue = Integer.valueOf( hexColor.substring( 3, 5 ), 16 );
-        green = Integer.valueOf( hexColor.substring( 5, 7 ), 16 );
+        green = Integer.valueOf( hexColor.substring( 3, 5 ), 16 );
+        blue = Integer.valueOf( hexColor.substring( 5, 7 ), 16 );
         
         this.displayTime = displayTime;
         this.transitionTime = transferTime;

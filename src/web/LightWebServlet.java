@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import transfer.AnimationSequence;
+import driver.SampleLightServer;
 
 /**
  * Servlet implementation class WebServlet
@@ -17,6 +18,8 @@ import transfer.AnimationSequence;
 @WebServlet("/LightWebServlet")
 public class LightWebServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private boolean started = false;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,11 +45,23 @@ public class LightWebServlet extends HttpServlet {
 		// doGet(request, response);
 		String jsonResponse = request.getReader().lines().collect(Collectors.joining());
 		System.out.println(jsonResponse);
+		AnimationSequence testSequence = null;
 		try {
-			AnimationSequence testSequence = new AnimationSequence(jsonResponse);
+			testSequence = new AnimationSequence(jsonResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(!started) {
+			try {
+				Runnable r = new SampleLightServer(testSequence);
+				new Thread(r).start();
+				started = false;
+			} catch(Exception e) {
+				// TODO
+			}
+		}
+		
 	}
 
 }

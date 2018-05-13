@@ -7,7 +7,7 @@ import java.net.*;
 import java.util.Arrays;
 import java.util.Date;
 
-class LedStrip {
+public class LedStrip {
 
 	byte[] externalbuffer;
 	byte[] internalbuffer;

@@ -6,7 +6,7 @@ import java.net.*;
 
 import java.util.Arrays;
 
-class FrameGenerator {
+public class FrameGenerator {
 
 	byte[] buffer;
 	boolean done = true;
