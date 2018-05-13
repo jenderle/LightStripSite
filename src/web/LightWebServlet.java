@@ -1,6 +1,8 @@
 package web;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,7 +37,8 @@ public class LightWebServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		// doGet(request, response);
+		System.out.println(request.getReader().lines().collect(Collectors.joining()));
 	}
 
 }
