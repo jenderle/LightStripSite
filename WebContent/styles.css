@@ -3,20 +3,6 @@
     cursor: pointer;
 }
 
-/* CSS Table for input alignment */
-.inputTable {
-    display: table;
-}
-
-.inputRow {
-    display: table-row;
-}
-
-.inputCell {
-    display: table-cell;
-}
-
-
 /* CSS Grid for mobile responsiveness */
 .gridContainer {
     display: grid;
@@ -24,11 +10,11 @@
 }
 
 .gridForm {
-    grid-column: span 6;
+    grid-column: 1/4;
 }
 
 .gridResults {
-    grid-column: span 6;
+    grid-column: 7/-1;
 }
 
 @media screen and (max-width: 720px) {
