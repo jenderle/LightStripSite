@@ -1,85 +1,84 @@
-<!--
-Jonathan Enderle
-SE 2840 031
-Lab 4
-12/21/17
--->
-
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LED Strip Configurator</title>
     <link rel="stylesheet" href="./styles.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-touch.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
     <script src="./controller.js"></script>
-    <script>
-        var controller = new Controller();
-    </script>
 </head>
 
-<body>
+<body ng-app="lightApp">
+    <div class="container-fluid" ng-controller="busController">
 
-
-    <div>
-        <h1>Welcome to the LED Strip configurator!</h1>
-        <p>Here, you can configure your LED strips.</p>
-    </div>
-
-    
-    <div>
-        <h3>Add an animation item:</h3>
         <div>
-            <label for="color">Color:</label>
-            <input id="color" type="text" name="color" value="#000000">
-            <br>
+            <h1>Welcome to the LED Strip configurator!</h1>
+            <p>Here, you can configure your LED strips.</p>
+        </div>
 
-            <label for="displayTime">Display Time (ms):</label>
-            <input id="displayTime" type="number" name="displayTime" value="0">
-            <br>
 
-            <label for="transitionTime">Transition Time (ms):</label>
-            <input id="transitionTime" type="number" name="transitionTime" value="0">
-            <br>
-
-            <div>Transition type:</div>
+        <div>
+            <h3>Add an animation item:</h3>
             <div>
-              <input type="radio" id="transitionType1"
-               name="transitionType" value="type1" checked>
-              <label for="transitionType1">Type 1</label>
-          
-              <input type="radio" id="transitionType2"
-               name="transitionType" value="type2">
-              <label for="transitionType2">Type 2</label>
-          
-              <input type="radio" id="transitionType3"
-               name="transitionType" value="type3">
-              <label for="transitionType3">Type 3</label>
+                <label for="color">Color:</label>
+                <input id="color" type="text" name="color" value="#000000" ng-model="ngColor">
+                <br>
+
+                <label for="displayTime">Display Time (ms):</label>
+                <input id="displayTime" type="number" name="displayTime" value="0" ng-model="ngDisplayTime">
+                <br>
+
+                <label for="transitionTime">Transition Time (ms):</label>
+                <input id="transitionTime" type="number" name="transitionTime" value="0" ng-model="ngTransitionTime">
+                <br>
+
+                <label>Transition type:</label> <!-- TODO: Change this to not a div -->
+                <div>
+                    <input type="radio" id="transitionType1" name="transitionType" value="type1" ng-model="ngTransitionType" checked>
+                    <label for="transitionType1">Type 1</label>
+
+                    <input type="radio" id="transitionType2" name="transitionType" value="type2" ng-model="ngTransitionType">
+                    <label for="transitionType2">Type 2</label>
+
+                    <input type="radio" id="transitionType3" name="transitionType" value="type3" ng-model="ngTransitionType">
+                    <label for="transitionType3">Type 3</label>
+                </div>
+                <br>
+
+                <input type="button" value="Add Item" id="addButton" ng-click="addItem()">
+
             </div>
-            <br>
-
-            <input type="button" value="Add Item" id="addButton">
-          
         </div>
-    </div>
 
 
-    <div>
-        <h3>Currently scheduled animation items:</h3>
-        <div id="animationItems">
-
-        </div>
         <div>
-            <label for="sendButton">Send Items to LED Strip</label>
-            <br>
-            <input type="button" value="Send Items" id="sendButton" name="sendButton">
+            <h3>Currently scheduled animation items:</h3>
+
+            <div>
+                <table class="table table-striped" id="animationTable">
+                    <thead><tr><th>Color</th><th>Display Time (ms)</th><th>Transition Time (ms)</th><th>Transition Type</th></tr></thead><tbody>
+                    <tr ng-repeat='item in ngItems track by $index'>
+                        <td>{{item.color}}</td>
+                        <td>{{item.displayTime}}</td>
+                        <td>{{item.transitionTime}}</td>
+                        <td>{{item.transitionType}}</td>
+                    </tr></tbody>
+                </table>
+            </div>
+
+            <div>
+                <label for="sendButton">Send Items to LED Strip</label>
+                <br>
+                <input type="button" value="Send Items" id="sendButton" name="sendButton" ng-click="sendItems()">
+            </div>
         </div>
-    </div>
 
-
-
+    </div> <!-- end container-fluid -->
 </body>
 
 </html>

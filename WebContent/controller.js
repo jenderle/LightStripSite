@@ -1,65 +1,45 @@
-class Controller {
+var lightApp = angular.module('lightApp', ['ui.bootstrap']);
+lightApp.controller('busController', function ($scope, $http) {
+    'use strict';
+    $scope.ngItems = [];
 
-    constructor() {
-        var self = this;
-        $().ready(function () {
-            self.onLoad();
-        });
-    }
-    
-    onLoad() {
-        console.log("Loaded.");
+    $scope.addItem = function() {
+		addItem();
+    };
 
-        var items = [];
+    $scope.sendItems = function() {
+		sendItems();
+	};
 
-        // attach listener to button
-        $('#addButton').click(function() {
-            addItem();
-        });
+    var addItem = function () {
+        var animationItem = {};
+        animationItem.color = $scope.ngColor;
+        animationItem.displayTime = $scope.ngDisplayTime;
+        animationItem.transitionTime = $scope.ngTransitionTime;
+        animationItem.transitionType = $scope.ngTransitionType;
 
-        $('#sendButton').click(function() {
-            sendItems();
-        });
+        $scope.ngItems.push(animationItem);
+    };
 
+    var sendItems = function() {
+        $http({
+            method: 'POST',
+            url: './LightWebServlet',
+            data: JSON.stringify($scope.ngItems),
+            headers: {'Content-Type': 'application/json'}
+        }).then(function mySuccess(response) {
+			handleSuccess(response);
+		}, function myError(response) {
+			handleError(response);
+		});
+    };
 
-        // Add the animation item to the list
-        var addItem = function () {
-            var color = $('#color').val();
-            var displayTime = $('#displayTime').val();
-            var transitionTime = $('#transitionTime').val();
-            var transitionType = $('input[name=transitionType]:checked').val();
-
-            var animationItem = {};
-            animationItem.color = color;
-            animationItem.displayTime = displayTime;
-            animationItem.transitionTime = transitionTime;
-            animationItem.transitionType = transitionType;
-
-            items.push(animationItem);
-
-            renderItems();
-        };
-
-        var sendItems = function() {
-            $.post("./LightWebServlet", JSON.stringify(items), "json");
-        };
-
-
-        var renderItems = function() {
-            $('#animationItems').empty();
-
-            var itemsHTML = "";
-
-            items.forEach(function(element) {
-                itemsHTML += ("<div><p>Color: " + element.color +
-                "</p><p>Display Time: " + element.displayTime +
-                "</p><p>Transition Time: " + element.transitionTime +
-                "</p><p>Transition Type: " + element.transitionType + "</p></div>");
-            });
-
-            $('#animationItems').html(itemsHTML);
-        };
-
+    function handleSuccess(response) {
+        console.log(response);
     }
 
-}
+    function handleError(response) {
+        console.log(response);
+    }
+
+});
