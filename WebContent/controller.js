@@ -3,6 +3,11 @@ lightApp.controller('busController', function ($scope, $http) {
     'use strict';
     $scope.ngItems = [];
 
+    $scope.ngColor = '#FFFFFF';
+    $scope.ngDisplayTime = 1000;
+    $scope.ngTransitionTime = 1000;
+    $scope.ngTransitionType = 'type1';   
+
     $scope.addItem = function() {
 		addItem();
     };
@@ -36,10 +41,18 @@ lightApp.controller('busController', function ($scope, $http) {
 
     function handleSuccess(response) {
         console.log(response);
+        $scope.alerts = [];
+        $scope.alerts.push({ type: 'success', msg: 'Animation data sent!' });
     }
 
     function handleError(response) {
         console.log(response);
+        $scope.alerts = [];
+        $scope.alerts.push({ type: 'danger', msg: 'Unable to send animation data.' });
     }
+    
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
 
 });

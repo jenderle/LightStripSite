@@ -4,78 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LED Strip Configurator</title>
-    <link rel="stylesheet" href="./styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-touch.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="./styles.css">
     <script src="./controller.js"></script>
 </head>
 
 <body ng-app="lightApp">
     <div class="container-fluid" ng-controller="busController">
 
-        <div>
-            <h1>Welcome to the LED Strip configurator!</h1>
-            <p>Here, you can configure your LED strips.</p>
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to the LED Strip configurator!</h1>
+            <p class="lead">Here, you can configure your LED strips.</p>
+            <hr class="my-4">
+            <p><a href="https://github.com/jenderle/LightStripSite">Github</a></p>
         </div>
 
 
-        <div>
-            <h3>Add an animation item:</h3>
-            <div>
-                <label for="color">Color:</label>
-                <input id="color" type="text" name="color" value="#000000" ng-model="ngColor">
-                <br>
+        <div class="gridContainer">
+            <div class="gridForm">
+                <form> <!-- TODO: Add Bootstrap validation styling for input items -->
+                    <h3>Add an animation item:</h3>
+                    <div>
+                        <div class="inputTable">
+                            <div class="inputRow">
+                                <label class="inputCell" for="color">Color: </label>
+                                <input class="inputCell" id="color" type="text" name="color" value="#000000" ng-model="ngColor">
+                            </div>
 
-                <label for="displayTime">Display Time (ms):</label>
-                <input id="displayTime" type="number" name="displayTime" value="0" ng-model="ngDisplayTime">
-                <br>
+                            <div class="inputRow">
+                                <label class="inputCell" for="displayTime">Display Time (ms): </label>
+                                <input class="inputCell" id="displayTime" type="number" name="displayTime" value="0" ng-model="ngDisplayTime">
+                            </div>
 
-                <label for="transitionTime">Transition Time (ms):</label>
-                <input id="transitionTime" type="number" name="transitionTime" value="0" ng-model="ngTransitionTime">
-                <br>
+                            <div class="inputRow">
+                                <label class="inputCell" for="transitionTime">Transition Time (ms): </label>
+                                <input class="inputCell" id="transitionTime" type="number" name="transitionTime" value="0" ng-model="ngTransitionTime">
+                            </div>
+                        </div> <!-- end inputTable -->
 
-                <label>Transition type:</label> <!-- TODO: Change this to not a div -->
+                        <label>Transition type:</label>
+                        <div>
+                            <input type="radio" id="transitionType1" name="transitionType" value="type1" ng-model="ngTransitionType" checked>
+                            <label for="transitionType1">Type 1</label>
+
+                            <input type="radio" id="transitionType2" name="transitionType" value="type2" ng-model="ngTransitionType">
+                            <label for="transitionType2">Type 2</label>
+
+                            <input type="radio" id="transitionType3" name="transitionType" value="type3" ng-model="ngTransitionType">
+                            <label for="transitionType3">Type 3</label>
+                        </div>
+                        <br>
+
+                        <input class="btn btn-primary" type="button" value="Add Item" id="addButton" ng-click="addItem()">
+                    </div>
+                </form>
+            </div>
+        
+            <div class="gridResults">
+                <h3>Currently scheduled animation items:</h3>
+
                 <div>
-                    <input type="radio" id="transitionType1" name="transitionType" value="type1" ng-model="ngTransitionType" checked>
-                    <label for="transitionType1">Type 1</label>
-
-                    <input type="radio" id="transitionType2" name="transitionType" value="type2" ng-model="ngTransitionType">
-                    <label for="transitionType2">Type 2</label>
-
-                    <input type="radio" id="transitionType3" name="transitionType" value="type3" ng-model="ngTransitionType">
-                    <label for="transitionType3">Type 3</label>
+                    <table class="table table-striped" id="animationTable">
+                        <thead><tr><th>Color</th><th>Display Time (ms)</th><th>Transition Time (ms)</th><th>Transition Type</th></tr></thead><tbody>
+                        <tr ng-repeat='item in ngItems track by $index'>
+                            <td>{{item.color}}</td>
+                            <td>{{item.displayTime}}</td>
+                            <td>{{item.transitionTime}}</td>
+                            <td>{{item.transitionType}}</td>
+                        </tr></tbody>
+                    </table>
                 </div>
+
+                <div>
+                    <label for="sendButton">Send Items to LED Strip</label>
+                    <br>
+                    <input class="btn btn-primary" type="button" value="Send Items" id="sendButton" name="sendButton" ng-click="sendItems()">
+                </div>
+
                 <br>
-
-                <input type="button" value="Add Item" id="addButton" ng-click="addItem()">
+                <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
 
             </div>
-        </div>
 
-
-        <div>
-            <h3>Currently scheduled animation items:</h3>
-
-            <div>
-                <table class="table table-striped" id="animationTable">
-                    <thead><tr><th>Color</th><th>Display Time (ms)</th><th>Transition Time (ms)</th><th>Transition Type</th></tr></thead><tbody>
-                    <tr ng-repeat='item in ngItems track by $index'>
-                        <td>{{item.color}}</td>
-                        <td>{{item.displayTime}}</td>
-                        <td>{{item.transitionTime}}</td>
-                        <td>{{item.transitionType}}</td>
-                    </tr></tbody>
-                </table>
-            </div>
-
-            <div>
-                <label for="sendButton">Send Items to LED Strip</label>
-                <br>
-                <input type="button" value="Send Items" id="sendButton" name="sendButton" ng-click="sendItems()">
-            </div>
         </div>
 
     </div> <!-- end container-fluid -->

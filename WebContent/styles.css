@@ -2,3 +2,48 @@
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
 }
+
+/* CSS Table for input alignment */
+.inputTable {
+    display: table;
+}
+
+.inputRow {
+    display: table-row;
+}
+
+.inputCell {
+    display: table-cell;
+}
+
+
+/* CSS Grid for mobile responsiveness */
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.gridForm {
+    grid-column: span 6;
+}
+
+.gridResults {
+    grid-column: span 6;
+}
+
+@media screen and (max-width: 720px) {
+    .gridForm {
+        grid-column: span 12;
+    }
+    
+    .gridResults {
+        grid-column: span 12;
+    }
+}
+
+/* Add a gap at top of page */
+body {
+    margin-top: 15px;
+}
+
+/* TODO: add padding inside of input table */
