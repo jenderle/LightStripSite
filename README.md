@@ -4,13 +4,17 @@
 
 * Web application to send RGB color values to multiple LED light strips
 * Currently in development
-* Angular frontend with Java backend
+* AngularJS frontend with Apache Tomcat Java backend
 
 ### How do I get set up? ###
 
 * Configuration: Clone repository to an Eclipse Java EE workspace with a Tomcat server configured.
-* Java version: JRE 8u172
-* Tomcat version: 9.0.8
+* Software versions:
+  * Java: JRE 8u172
+  * Tomcat: 9.0.8
+  * AngularJS: 1.6.1
+  * Bootstrap CSS: 3.3.7
+  * UI Bootstrap: 2.5.0
 
 ### Contribution guidelines ###
 
