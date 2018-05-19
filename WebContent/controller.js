@@ -1,12 +1,21 @@
-var lightApp = angular.module('lightApp', ['ui.bootstrap']);
+var lightApp = angular.module('lightApp', ['ui.bootstrap', 'color.picker']);
 lightApp.controller('busController', function ($scope, $http) {
     'use strict';
     $scope.ngItems = [];
 
-    $scope.ngColor = '#FFFFFF';
+    $scope.ngColor = '#FF0000';
     $scope.ngDisplayTime = 1000;
     $scope.ngTransitionTime = 1000;
-    $scope.ngTransitionType = 'type1';   
+    $scope.ngTransitionType = 'type1';
+
+    /* Some magic to make the color picker work */
+    $scope.colorPickerOptions = {
+        placeholder: 'My Color',
+        inputClass: 'form-control',
+        swatchPos: 'right',
+        format: 'hexString',
+        alpha: false,
+    };
 
     $scope.addItem = function() {
 		addItem();

@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LED Strip Configurator</title>
+
+    <!-- AngularJS and Bootstrap -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-touch.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
-    <script src="./WEB-INF/lib/tinycolor.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+
+    <!-- Angular Color Picker -->
+    <link rel="stylesheet" href="./WEB-INF/lib/angularjs-color-picker.css" />
+    <link rel="stylesheet" href="./WEB-INF/lib/angularjs-color-picker-bootstrap.css" />
+    <script src="./WEB-INF/lib/tinycolor.js"></script>
+    <script src="./WEB-INF/lib/angularjs-color-picker.js"></script>
+
+    <!-- Custom -->
     <link rel="stylesheet" href="./styles.css">
     <script src="./controller.js"></script>
 </head>
@@ -31,7 +40,7 @@
                     <h3>Add an animation item:</h3>
                     <div class="form-group">
                         <label for="color">Color: </label>
-                        <input class="form-control" id="color" type="text" name="color" value="#000000" ng-model="ngColor">
+                        <color-picker options="colorPickerOptions" ng-model="ngColor"></color-picker>
                     </div>
 
                     <div class="form-group">
