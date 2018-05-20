@@ -6,7 +6,7 @@ lightApp.controller('busController', function ($scope, $http) {
     $scope.ngColor = '#FF0000';
     $scope.ngDisplayTime = 1000;
     $scope.ngTransitionTime = 1000;
-    $scope.ngTransitionType = 'type1';
+    $scope.ngTransitionType = 'Jump';
 
     /* Some magic to make the color picker work */
     $scope.colorPickerOptions = {
