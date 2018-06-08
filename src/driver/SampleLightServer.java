@@ -6,11 +6,10 @@ import java.util.ArrayList;
 
 import transfer.AnimationItem;
 import transfer.AnimationSequence;
-import java.util.*;
 
 public class SampleLightServer implements Runnable {
 
-	// TODO: edit this to be the port you wanna communicate on
+	// The port we communicate on
 	private final int PORT = 1090;
 
 	private BufferedReader consoleinput;
@@ -27,17 +26,7 @@ public class SampleLightServer implements Runnable {
 
 	private int lastnumstrips = 0;
 
-	private ArrayList<LedStrip> alldastrips = new ArrayList<LedStrip>(); // Do something with this arraylist
-
-	public static void main(String args[]) {
-		try {
-			SampleLightServer testServer = new SampleLightServer(null); // TODO: Ryan you'll wanna put an actual
-																		// animation sequence in there
-			testServer.commsTest();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private ArrayList<LedStrip> alldastrips = new ArrayList<LedStrip>();
 
 	public SampleLightServer(AnimationSequence frames) {
 		this.frames = frames;
@@ -49,7 +38,7 @@ public class SampleLightServer implements Runnable {
 		srvr = new ServerSocket(PORT); // create server
 		System.out.println("Server started.");
 
-		// TODO: Spin up thread for clinets and whatnot <alldastrips>
+		// Spin up thread for the multi-client connector
 		Runnable r = new StripConnector(alldastrips, srvr);
 		new Thread(r).start();
 

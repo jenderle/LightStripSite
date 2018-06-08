@@ -1,9 +1,7 @@
 package driver;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.lang.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -70,7 +68,7 @@ public class StripConnector implements Runnable {
 		         }
 			}
 		} catch (Exception e) {
-			// TODO: Maybe do this better
+			// TODO: Handle exceptions better so that we don't crash.
 			System.out.println("StripConnector broke. Exception message: ");
 			e.printStackTrace(System.out);
 		}
