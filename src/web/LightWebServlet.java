@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import transfer.AnimationSequence;
+import transfer.AnimationSource;
 import driver.SampleLightServer;
 
 /**
@@ -46,21 +47,27 @@ public class LightWebServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String jsonResponse = request.getReader().lines().collect(Collectors.joining());
 		System.out.println(jsonResponse);
-		AnimationSequence testSequence = null;
+		AnimationSequence animationSequence = null;
 		try {
-			testSequence = new AnimationSequence(jsonResponse);
+			animationSequence = new AnimationSequence(jsonResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		SampleLightServer ledServer;
+		AnimationSource webSource = new AnimationSource();
+		
 		if(!started) {
 			try {
-				Runnable r = new SampleLightServer(testSequence);
-				new Thread(r).start();
-				started = false;
+				webSource.setAnimationSequence(animationSequence);
+				ledServer = new SampleLightServer(webSource);
+				new Thread(ledServer).start();
+				started = true;
 			} catch(Exception e) {
 				// TODO
 			}
+		} else {
+			webSource.setAnimationSequence(animationSequence);
 		}
 		
 	}

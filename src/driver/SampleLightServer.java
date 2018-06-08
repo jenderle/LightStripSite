@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import transfer.AnimationStep;
 import transfer.AnimationSequence;
+import transfer.AnimationSource;
 
 public class SampleLightServer implements Runnable {
 
@@ -21,15 +22,16 @@ public class SampleLightServer implements Runnable {
 
 	private LedStrip myled;
 	private FrameGenerator mygen;
+	
+	private AnimationSource latestAnimationFromWeb;
 
-	private AnimationSequence animationSequence;
 
 	private int lastnumstrips = 0;
 
 	private ArrayList<LedStrip> alldastrips = new ArrayList<LedStrip>();
 
-	public SampleLightServer(AnimationSequence animationSequence) {
-		this.animationSequence = animationSequence;
+	public SampleLightServer(AnimationSource animationSource) {
+		latestAnimationFromWeb = animationSource;
 	}
 
 	public void commsTest() throws Exception {
@@ -44,6 +46,9 @@ public class SampleLightServer implements Runnable {
 
 		int run = 1;
 		while (run == 1) { // keep going while connection is active
+			
+			// Fetch the latest sequence from the AnimationSource
+			AnimationSequence animationSequence = latestAnimationFromWeb.getAnimationSequence();
 
 			if (alldastrips.size() > 0) {
 				
@@ -79,31 +84,6 @@ public class SampleLightServer implements Runnable {
 
 					}
 
-				}
-			}
-
-			/*
-			 * System.out.print("Sending black FRAME '" + "'\n"); // put your data here. Can
-			 * be stuff other than strings. myled.sendframe(mygen.buildsolid((byte)0,
-			 * (byte)0, (byte)0, 300)); //build a solid black frame, and send it to the
-			 * strip Thread.sleep(1000); // Just pause for a second
-			 */
-
-			if (consoleinput.ready()) {
-				String userinput = consoleinput.readLine();
-				System.out.println("Received console input: " + userinput);
-				if (userinput.equals("q")) {
-					System.out.println("Quitting...."); // do quitting stuff
-					run = 0;
-				} else if (userinput.equals("s")) {
-					while (!consoleinput.ready()) {
-						// Block until we recieve another command.
-						if (in.ready()) {
-							// we got some data from the client
-							String ping = in.readLine();
-							System.out.println("Received ping: " + ping);
-						}
-					}
 				}
 			}
 

@@ -11,10 +11,6 @@ public class AnimationSource {
 	
 	private AnimationSequence animationSequence;
 	
-	public AnimationSource(AnimationSequence animationSequence) {
-		this.animationSequence = animationSequence;
-	}
-	
 	public AnimationSequence getAnimationSequence() {
 		return animationSequence;
 	}
