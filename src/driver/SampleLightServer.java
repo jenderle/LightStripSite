@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
-import transfer.AnimationItem;
+import transfer.AnimationStep;
 import transfer.AnimationSequence;
 
 public class SampleLightServer implements Runnable {
@@ -22,14 +22,14 @@ public class SampleLightServer implements Runnable {
 	private LedStrip myled;
 	private FrameGenerator mygen;
 
-	private AnimationSequence frames;
+	private AnimationSequence animationSequence;
 
 	private int lastnumstrips = 0;
 
 	private ArrayList<LedStrip> alldastrips = new ArrayList<LedStrip>();
 
-	public SampleLightServer(AnimationSequence frames) {
-		this.frames = frames;
+	public SampleLightServer(AnimationSequence animationSequence) {
+		this.animationSequence = animationSequence;
 	}
 
 	public void commsTest() throws Exception {
@@ -55,11 +55,11 @@ public class SampleLightServer implements Runnable {
 					doitup.add(new FrameGenerator());
 				}
 
-				int numberFrames = frames.getItems().size();
+				int numberSteps = animationSequence.getSteps().size();
 
-				for (int i = 0; i < numberFrames - 1; i++) {
-					AnimationItem currentFrame = frames.getItems().get(i);
-					AnimationItem nextFrame = frames.getItems().get(i + 1);
+				for (int i = 0; i < numberSteps - 1; i++) {
+					AnimationStep currentFrame = animationSequence.getSteps().get(i);
+					AnimationStep nextFrame = animationSequence.getSteps().get(i + 1);
 
 					// Set up all the sweeps
 					for (int j = 0; j < thisrunsize; j++) { // set up all teh sweeps

@@ -5,7 +5,7 @@ package transfer;
  * @author Jonathan Enderle
  *
  */
-public class AnimationItem {
+public class AnimationStep {
 
 	private int red;
 	private int green;
@@ -16,7 +16,7 @@ public class AnimationItem {
 	
 	private TransitionType transitionType;
 	
-	public AnimationItem(String hexColor, int displayTime, int transferTime, String transitionType) throws Exception {
+	public AnimationStep(String hexColor, int displayTime, int transferTime, String transitionType) throws Exception {
         red = Integer.valueOf( hexColor.substring( 1, 3 ), 16 );
         green = Integer.valueOf( hexColor.substring( 3, 5 ), 16 );
         blue = Integer.valueOf( hexColor.substring( 5, 7 ), 16 );

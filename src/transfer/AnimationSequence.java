@@ -8,15 +8,15 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
- * Contains a set of animation items generated from the webapp's JSON
+ * Contains a set of animation steps generated from the webapp's JSON
  * @author Jonathan Enderle
  *
  */
 public class AnimationSequence {
-	private List<AnimationItem> items;
+	private List<AnimationStep> steps;
 	
 	public AnimationSequence(String json) throws Exception {
-		this.items = new ArrayList<>();
+		this.steps = new ArrayList<>();
 		
 		JSONParser parser = new JSONParser();
 		JSONArray items = (JSONArray) parser.parse(json);
@@ -28,13 +28,13 @@ public class AnimationSequence {
 			int transitionTime = ((Long) jsonItem.get("transitionTime")).intValue();
 			String transitionType = (String) jsonItem.get("transitionType");
 			
-			AnimationItem animationItem = new AnimationItem(color, displayTime, transitionTime, transitionType);
-			this.items.add(animationItem);
+			AnimationStep animationStep = new AnimationStep(color, displayTime, transitionTime, transitionType);
+			this.steps.add(animationStep);
 		}
 	}
 	
-	public List<AnimationItem> getItems() {
-		return this.items;
+	public List<AnimationStep> getSteps() {
+		return this.steps;
 	}
 
 }
