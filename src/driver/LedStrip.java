@@ -43,7 +43,7 @@ public class LedStrip {
 		return(size);
 	} 
 
-	public void run() throws Exception{
+	public void run() throws Exception{ //TODO: Make this threadable
 		transmitting = true;
 		internalbuffer = Arrays.copyOf(externalbuffer, externalbuffer.length); //copy working buffer into internal buffer
 		dater.write(internalbuffer); //Send the internal buffered frame to the RXsocket
@@ -52,7 +52,7 @@ public class LedStrip {
       	long start_timeout_time = timeoutdate.getTime();
       	while (!in.ready()) {// block until client has acked, or we have timed out
          	timeoutdate = new Date();
-         	if(timeoutdate.getTime() - start_timeout_time> 5000){ //If we have timed-out
+         	if(timeoutdate.getTime() - start_timeout_time> 4000){ //If we have timed-out
             	System.out.println("Timeout! ");
          		break;
       		}

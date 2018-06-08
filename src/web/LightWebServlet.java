@@ -38,11 +38,12 @@ public class LightWebServlet extends HttpServlet {
 	}
 
 	/**
+	 * When a web client posts data, we spin up the LightServer if we haven't already.
+	 * This manages getting LED strip clients and sending frames to them.
+	 * 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// doGet(request, response);
 		String jsonResponse = request.getReader().lines().collect(Collectors.joining());
 		System.out.println(jsonResponse);
 		AnimationSequence testSequence = null;

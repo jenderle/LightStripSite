@@ -25,14 +25,14 @@ public class AnimationItem {
         this.transitionTime = transferTime;
         
         switch(transitionType) {
-        case "type1":
-        	this.transitionType = TransitionType.TYPE1;
+        case "Jump":
+        	this.transitionType = TransitionType.JUMP;
         	break;
-        case "type2":
-        	this.transitionType = TransitionType.TYPE1;
+        case "Fade":
+        	this.transitionType = TransitionType.FADE;
         	break;
-        case "type3":
-        	this.transitionType = TransitionType.TYPE3;
+        case "Sweep":
+        	this.transitionType = TransitionType.SWEEP;
         	break;
         default:
         	throw new Exception("Bad transition type.");

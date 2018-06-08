@@ -89,7 +89,7 @@ public class FrameGenerator {
 	  			return(buildsolid((int)thisred, (int)thisgreen, (int)thisblue, numpixels));
    			//break;
    			case 2: //Do a sweep
-   				if(count < (numsteps)){ //Put animation frame generation in here
+   				if(count < (numsteps+1)){ //Put animation frame generation in here
 	  				byte[] temparray = new byte [numpixels*3];
 
 	  				for(int pixelcount = 0; pixelcount < numpixels; pixelcount++){ //build a frame
@@ -104,11 +104,16 @@ public class FrameGenerator {
 			            }
 			         }
 			         count = count + 1;
+			         if(count == (numsteps+1)) {
+			        	 done = true;
+			         }
 			         if(flipdir){
 			            return(flipframe(temparray));
 			         }else{
 			            return(temparray);
 			         }
+			         
+			         
 	  			}else{
 	  				done = true;
 	  			}

@@ -24,8 +24,8 @@ public class AnimationSequence {
 		for(Object item : items) {
 			JSONObject jsonItem = (JSONObject) item;
 			String color = (String) jsonItem.get("color");
-			int displayTime  = Integer.parseInt((String) jsonItem.get("displayTime"));
-			int transitionTime = Integer.parseInt((String) jsonItem.get("transitionTime"));
+			int displayTime  = ((Long) jsonItem.get("displayTime")).intValue();
+			int transitionTime = ((Long) jsonItem.get("transitionTime")).intValue();
 			String transitionType = (String) jsonItem.get("transitionType");
 			
 			AnimationItem animationItem = new AnimationItem(color, displayTime, transitionTime, transitionType);
