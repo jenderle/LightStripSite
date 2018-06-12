@@ -1,12 +1,15 @@
 package driver;
 
 import java.io.*;
+
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 import transfer.AnimationStep;
 import transfer.AnimationSequence;
 import transfer.AnimationSource;
+import transfer.TransitionType;
 
 public class SampleLightServer implements Runnable {
 
@@ -24,6 +27,9 @@ public class SampleLightServer implements Runnable {
 	private FrameGenerator mygen;
 	
 	private AnimationSource latestAnimationFromWeb;
+	
+	
+	private int TARGETFRAMERATE = 60; //target 60 fps
 
 
 	private int lastnumstrips = 0;
@@ -61,19 +67,39 @@ public class SampleLightServer implements Runnable {
 				}
 
 				int numberSteps = animationSequence.getSteps().size();
+				System.out.println("Number of Steps: " + numberSteps );
+				
 
 				for (int i = 0; i < numberSteps - 1; i++) {
 					AnimationStep currentFrame = animationSequence.getSteps().get(i);
 					AnimationStep nextFrame = animationSequence.getSteps().get(i + 1);
 
-					// Set up all the sweeps
+					// Set up all the animations
 					for (int j = 0; j < thisrunsize; j++) { // set up all teh sweeps
-						doitup.get(j).sweep(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(),
-								nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), 300, alldastrips.get(j).length(),
-								true); // set up sweeps with 300 stops
+						switch(nextFrame.getTransitionType()) {
+						case JUMP:
+							while(!doitup.get(j).snap(nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(),alldastrips.get(j).length())) { //clear out any weird remaining frames
+								doitup.get(j).run(); //Get a remaining frame
+							}
+							break;
+						case FADE:
+							while(!doitup.get(j).fade(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length())) {
+								doitup.get(j).run(); //Get a remaining frame
+							}
+							break;
+						case SWEEP:
+							while(!doitup.get(j).sweep(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true)) { // set up sweeps with 300 stops
+								doitup.get(j).run(); //Get a remaining frame
+							}
+							break;
+						}
+						
+						doitup.get(j).sweep(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true); // set up sweeps with 300 stops
 					}
 
 					while (!doitup.get(0).isdone() && allBuffersMatch() ) { // Master framegen isn't done yet and all led strips have successfully transmitted
+						Date frametime = new Date(); // Start counting ms for frame time
+						long start_frametime = frametime.getTime();
 						for (int k = 0; k < thisrunsize; k++) { // send all the daters
 							alldastrips.get(k).sendframe(doitup.get(k).run());
 							if (!alldastrips.get(k).buffermatch()) { // If a new frame is in the input buffer - this
@@ -81,11 +107,31 @@ public class SampleLightServer implements Runnable {
 								alldastrips.get(k).run(); // Ship it.
 							}
 						}
+						
+						frametime = new Date(); // Update counter
+						while((frametime.getTime() - start_frametime) < (1000/TARGETFRAMERATE)) { //Block until frame time elapses
+							Thread.sleep(1); //wait a millisecond
+							frametime = new Date(); // Update counter
+						}
 
 					}
+					
+					//Do the hold time
+					Date holdtime = new Date(); // Start counting ms for hold time
+					long start_holdtime = holdtime.getTime();
+					
+					while((holdtime.getTime() - start_holdtime) < nextFrame.getDisplayTime()) { //Block until hold time elapses
+						Thread.sleep(1); //wait a millisecond
+						holdtime = new Date(); // Update counter
+					}
+					
+					
 
 				}
 			}
+			Thread.sleep(100);
+			System.out.println("AllDaStrips Size: " + alldastrips.size() );
+			
 
 		}
 		System.out.println("Exiting.");

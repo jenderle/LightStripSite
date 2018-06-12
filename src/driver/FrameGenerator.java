@@ -43,6 +43,20 @@ public class FrameGenerator {
 
       return(tempframe); //return byte array for display
    }
+	
+	public boolean snap(int red1, int green1, int blue1, int num_pixels) throws Exception {
+		if(done) {
+			thisred = red1;
+		    thisgreen = green1;
+		    thisblue = blue1;
+		    numpixels = num_pixels;
+		    lastmode = 0;
+			return(true);
+		}else {
+			System.out.println("Not Ready Yet. use MYVAR.run()");
+		}
+		return(false);
+	}
 
    	public boolean fade(int red1, int green1, int blue1, int red2, int green2, int blue2, int num_steps, int num_pixels) throws Exception{
 
@@ -62,15 +76,16 @@ public class FrameGenerator {
 	      count = 0;
 	      return(true);
 	  	}else{
-	  		if(lastmode != 1){ //if we are in the right mode
-	  			System.out.println("Not Ready Yet. use MYVAR.run()");
-	   		}
+	  		System.out.println("Not Ready Yet. use MYVAR.run()");
 	   	}
 	   	return(false);
    	}
 
    	public byte[] run() throws Exception {
    		switch (lastmode){
+   			case 0:
+   				done = true;
+   				return(buildsolid((int)thisred, (int)thisgreen, (int)thisblue, numpixels));
    			case 1: //Do a fade
 				if(count < (numsteps+1)){
 	  				thisred = thisred+redstep;
@@ -140,9 +155,7 @@ public class FrameGenerator {
 	      count = 0;
 	      return(true);
 	  	}else{
-	  		if(lastmode != 2){ //if we are in the right mode
-	  			System.out.println("Not Ready Yet");
-	   		}
+	  		System.out.println("Not Ready Yet");
 	   	}
 	   	return(false);
    	}
