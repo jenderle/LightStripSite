@@ -21,6 +21,8 @@ public class LightWebServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean started = false;
+	
+	private SampleLightServer ledServer;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -54,20 +56,20 @@ public class LightWebServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		SampleLightServer ledServer;
-		AnimationSource webSource = new AnimationSource();
-		
 		if(!started) {
 			try {
+				AnimationSource webSource = new AnimationSource();
 				webSource.setAnimationSequence(animationSequence);
 				ledServer = new SampleLightServer(webSource);
 				new Thread(ledServer).start();
 				started = true;
+				System.out.println("LED strip server started.");
 			} catch(Exception e) {
 				// TODO
 			}
 		} else {
-			webSource.setAnimationSequence(animationSequence);
+			ledServer.getAnimationSource().setAnimationSequence(animationSequence);
+			System.out.println("Animation source updated.");
 		}
 		
 	}

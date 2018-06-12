@@ -9,7 +9,7 @@ package transfer;
  */
 public class AnimationSource {
 	
-	private AnimationSequence animationSequence;
+	private volatile AnimationSequence animationSequence;
 	
 	public AnimationSequence getAnimationSequence() {
 		return animationSequence;

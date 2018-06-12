@@ -60,8 +60,7 @@ public class SampleLightServer implements Runnable {
 				
 				int thisrunsize = alldastrips.size();
 
-				ArrayList<FrameGenerator> doitup = new ArrayList<FrameGenerator>(); // Make an arraylist of frame
-																					// generators
+				ArrayList<FrameGenerator> doitup = new ArrayList<FrameGenerator>(); // Make an arraylist of frame generators
 				for (int i = 0; i < thisrunsize; i++) { // Make a frame generator for every led strip.
 					doitup.add(new FrameGenerator());
 				}
@@ -71,30 +70,30 @@ public class SampleLightServer implements Runnable {
 				
 
 				for (int i = 0; i < numberSteps - 1; i++) {
-					AnimationStep currentFrame = animationSequence.getSteps().get(i);
-					AnimationStep nextFrame = animationSequence.getSteps().get(i + 1);
+					AnimationStep currentStep = animationSequence.getSteps().get(i);
+					AnimationStep nextStep = animationSequence.getSteps().get(i + 1);
 
 					// Set up all the animations
 					for (int j = 0; j < thisrunsize; j++) { // set up all teh sweeps
-						switch(nextFrame.getTransitionType()) {
+						switch(nextStep.getTransitionType()) {
 						case JUMP:
-							while(!doitup.get(j).snap(nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(),alldastrips.get(j).length())) { //clear out any weird remaining frames
+							while(!doitup.get(j).snap(nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(),alldastrips.get(j).length())) { //clear out any weird remaining frames
 								doitup.get(j).run(); //Get a remaining frame
 							}
 							break;
 						case FADE:
-							while(!doitup.get(j).fade(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length())) {
+							while(!doitup.get(j).fade(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length())) {
 								doitup.get(j).run(); //Get a remaining frame
 							}
 							break;
 						case SWEEP:
-							while(!doitup.get(j).sweep(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true)) { // set up sweeps with 300 stops
+							while(!doitup.get(j).sweep(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true)) { // set up sweeps with 300 stops
 								doitup.get(j).run(); //Get a remaining frame
 							}
 							break;
 						}
 						
-						doitup.get(j).sweep(currentFrame.getRed(), currentFrame.getGreen(), currentFrame.getBlue(), nextFrame.getRed(), nextFrame.getGreen(), nextFrame.getBlue(), (nextFrame.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true); // set up sweeps with 300 stops
+						doitup.get(j).sweep(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true); // set up sweeps with 300 stops
 					}
 
 					while (!doitup.get(0).isdone() && allBuffersMatch() ) { // Master framegen isn't done yet and all led strips have successfully transmitted
@@ -120,7 +119,7 @@ public class SampleLightServer implements Runnable {
 					Date holdtime = new Date(); // Start counting ms for hold time
 					long start_holdtime = holdtime.getTime();
 					
-					while((holdtime.getTime() - start_holdtime) < nextFrame.getDisplayTime()) { //Block until hold time elapses
+					while((holdtime.getTime() - start_holdtime) < nextStep.getDisplayTime()) { //Block until hold time elapses
 						Thread.sleep(1); //wait a millisecond
 						holdtime = new Date(); // Update counter
 					}
@@ -165,6 +164,10 @@ public class SampleLightServer implements Runnable {
 			}
 		}
 		return buffersMatch;
+	}
+	
+	public AnimationSource getAnimationSource() {
+		return latestAnimationFromWeb;
 	}
 
 }
