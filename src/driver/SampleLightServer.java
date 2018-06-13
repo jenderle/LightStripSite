@@ -93,10 +93,9 @@ public class SampleLightServer implements Runnable {
 							break;
 						}
 						
-						doitup.get(j).sweep(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true); // set up sweeps with 300 stops
 					}
 
-					while (!doitup.get(0).isdone() && allBuffersMatch() ) { // Master framegen isn't done yet and all led strips have successfully transmitted
+					while (!allAnimationsDone(doitup) && allBuffersMatch() ) { // Master framegen isn't done yet and all led strips have successfully transmitted
 						Date frametime = new Date(); // Start counting ms for frame time
 						long start_frametime = frametime.getTime();
 						for (int k = 0; k < thisrunsize; k++) { // send all the daters
@@ -112,6 +111,10 @@ public class SampleLightServer implements Runnable {
 							Thread.sleep(1); //wait a millisecond
 							frametime = new Date(); // Update counter
 						}
+						
+						/*if((frametime.getTime() - start_frametime) > (1050/TARGETFRAMERATE)) { // we were 5% over our frametime
+							System.out.println("Frametime was " +(frametime.getTime() - start_frametime)+" ms. Expected: "+(1000/TARGETFRAMERATE) );
+						}*/
 
 					}
 					
@@ -164,6 +167,18 @@ public class SampleLightServer implements Runnable {
 			}
 		}
 		return buffersMatch;
+	}
+	
+	private boolean allAnimationsDone(ArrayList<FrameGenerator> copyofgenerators) {
+		boolean AnimationsDone = true;
+		for(FrameGenerator generator : copyofgenerators) {
+			try {
+				AnimationsDone = AnimationsDone && generator.isdone();
+			} catch (Exception e) {
+				AnimationsDone = false;
+			}
+		}
+		return AnimationsDone;
 	}
 	
 	public AnimationSource getAnimationSource() {

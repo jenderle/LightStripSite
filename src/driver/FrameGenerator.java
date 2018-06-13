@@ -51,9 +51,10 @@ public class FrameGenerator {
 		    thisblue = blue1;
 		    numpixels = num_pixels;
 		    lastmode = 0;
+		    done = false;
 			return(true);
 		}else {
-			System.out.println("Not Ready Yet. use MYVAR.run()");
+			System.out.println("Not Ready Yet. use MYVAR.run(). Trying to set up jump.");
 		}
 		return(false);
 	}
@@ -76,7 +77,7 @@ public class FrameGenerator {
 	      count = 0;
 	      return(true);
 	  	}else{
-	  		System.out.println("Not Ready Yet. use MYVAR.run()");
+	  		System.out.println("Not Ready Yet. use MYVAR.run(). Trying to set up fade.");
 	   	}
 	   	return(false);
    	}
@@ -92,13 +93,15 @@ public class FrameGenerator {
 	         		thisgreen = thisgreen+greenstep;
 	         		thisblue = thisblue+bluestep;
 	  				count = count + 1;
-	  			}else{
-	  				done = true;
 	  			}
+				
+				if(count == numsteps) {
+					done = true;
+				}
 	  			return(buildsolid((int)thisred, (int)thisgreen, (int)thisblue, numpixels));
    			//break;
    			case 2: //Do a sweep
-   				if(count < (numsteps+1)){ //Put animation frame generation in here
+   				if(count < (numsteps+2)){ //Put animation frame generation in here
 	  				byte[] temparray = new byte [numpixels*3];
 
 	  				for(int pixelcount = 0; pixelcount < numpixels; pixelcount++){ //build a frame
@@ -155,7 +158,7 @@ public class FrameGenerator {
 	      count = 0;
 	      return(true);
 	  	}else{
-	  		System.out.println("Not Ready Yet");
+	  		System.out.println("Not Ready Yet. Trying to set up sweep.");
 	   	}
 	   	return(false);
    	}
