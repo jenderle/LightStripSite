@@ -23,8 +23,6 @@ public class SampleLightServer implements Runnable {
 	private ServerSocket srvr; // The server
 	private Socket skt; // The socket for a client
 
-	private LedStrip myled;
-	private FrameGenerator mygen;
 	
 	private AnimationSource latestAnimationFromWeb;
 	
@@ -32,7 +30,6 @@ public class SampleLightServer implements Runnable {
 	private int TARGETFRAMERATE = 60; //target 60 fps
 
 
-	private int lastnumstrips = 0;
 
 	private ArrayList<LedStrip> alldastrips = new ArrayList<LedStrip>();
 
@@ -58,7 +55,32 @@ public class SampleLightServer implements Runnable {
 
 			if (alldastrips.size() > 0) {
 				
+				//Take this opportunity to close out any invalid client strips
+
+				long droppedclients = 0;
+				ArrayList<Integer> flaggedfordeletion = new ArrayList<Integer>();
+
+				for(int i = 0; i < alldastrips.size(); i++ ) {
+					if(alldastrips.get(i).isvalid()==false) {//If this led strip isn't valid...
+						flaggedfordeletion.add(i);
+						droppedclients = droppedclients +1;
+						break; //we need to circle back, since our .size changed!
+					}
+					
+				}
+				
+				if(droppedclients > 0) {
+					int deletedstuff = 0;
+					for(int i = 0; i< flaggedfordeletion.size(); i++) {
+						alldastrips.remove(flaggedfordeletion.get(i)-deletedstuff);
+						deletedstuff = deletedstuff + 1;
+					}
+					System.out.println("Dropped <" + flaggedfordeletion.size() + "> Clients!" );
+				}
+				
 				int thisrunsize = alldastrips.size();
+				
+				
 
 				ArrayList<FrameGenerator> doitup = new ArrayList<FrameGenerator>(); // Make an arraylist of frame generators
 				for (int i = 0; i < thisrunsize; i++) { // Make a frame generator for every led strip.
@@ -87,7 +109,7 @@ public class SampleLightServer implements Runnable {
 							}
 							break;
 						case SWEEP:
-							while(!doitup.get(j).sweep(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), true)) { // set up sweeps with 300 stops
+							while(!doitup.get(j).sweep(currentStep.getRed(), currentStep.getGreen(), currentStep.getBlue(), nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(), (nextStep.getTransitionTime()/TARGETFRAMERATE), alldastrips.get(j).length(), (Math.random() < 0.5))) { // set up sweeps with 300 stops
 								doitup.get(j).run(); //Get a remaining frame
 							}
 							break;
