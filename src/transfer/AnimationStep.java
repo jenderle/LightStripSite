@@ -39,6 +39,16 @@ public class AnimationStep {
         }
 	}
 	
+	public AnimationStep (int red1, int green1, int blue1) {
+		this.transitionType = TransitionType.JUMP;
+		this.displayTime = 100;
+        this.transitionTime = 100;
+        
+        red = red1;
+        green = green1;
+        blue = blue1;
+	}
+	
 	public int getRed() {
 		return red;
 	}

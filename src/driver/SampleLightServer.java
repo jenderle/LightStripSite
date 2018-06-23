@@ -1,5 +1,7 @@
 package driver;
 
+
+
 import java.io.*;
 
 import java.net.*;
@@ -48,6 +50,9 @@ public class SampleLightServer implements Runnable {
 		new Thread(r).start();
 
 		int run = 1;
+		int LocLastR = 0;
+		int LocLastG = 0;
+		int LocLastB = 0;
 		while (run == 1) { // keep going while connection is active
 			
 			// Fetch the latest sequence from the AnimationSource
@@ -90,13 +95,21 @@ public class SampleLightServer implements Runnable {
 				int numberSteps = animationSequence.getSteps().size();
 				System.out.println("Number of Steps: " + numberSteps );
 				
+			
 
-				for (int i = 0; i < numberSteps - 1; i++) {
-					AnimationStep currentStep = animationSequence.getSteps().get(i);
-					AnimationStep nextStep = animationSequence.getSteps().get(i + 1);
+				for (int i = 0; i < numberSteps; i++) { //do the steps
+					AnimationStep currentStep;
+					AnimationStep nextStep;
+					if(i == 0) {
+						currentStep = new AnimationStep(LocLastR,LocLastG,LocLastB); //set up a step with the colors from last time
+						nextStep = animationSequence.getSteps().get(i);
+						
+					}else {
+						currentStep = animationSequence.getSteps().get(i-1);
+						nextStep = animationSequence.getSteps().get(i);
+					}
 
-					// Set up all the animations
-					for (int j = 0; j < thisrunsize; j++) { // set up all teh sweeps
+					for (int j = 0; j < thisrunsize; j++) { // set up all the animations
 						switch(nextStep.getTransitionType()) {
 						case JUMP:
 							while(!doitup.get(j).snap(nextStep.getRed(), nextStep.getGreen(), nextStep.getBlue(),alldastrips.get(j).length())) { //clear out any weird remaining frames
@@ -152,6 +165,9 @@ public class SampleLightServer implements Runnable {
 					
 
 				}
+				LocLastR= doitup.get(0).lastTxR;
+				LocLastG =doitup.get(0).lastTxG;
+				LocLastB =doitup.get(0).lastTxB;
 			}
 			Thread.sleep(100);
 			System.out.println("AllDaStrips Size: " + alldastrips.size() );

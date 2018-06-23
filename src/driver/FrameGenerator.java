@@ -1,9 +1,15 @@
 package driver;
 
+import java.net.Socket;
+
 public class FrameGenerator {
 
 	byte[] buffer;
 	boolean done = true;
+	
+	int lastTxR;
+	int lastTxG;
+	int lastTxB;
 
 	float thisred;
 	float thisgreen;
@@ -28,7 +34,24 @@ public class FrameGenerator {
 
 	int lastmode = 0; //0 = static; 1=fade; 2=sweep;
 	
-
+	public FrameGenerator() throws Exception { // constructor
+		lastTxR= 0;
+		lastTxG= 0;
+		lastTxB= 0;
+	}
+	
+	public int lastred() {
+		return (lastTxR);
+	}
+	
+	public int lastgreen() {
+		return (lastTxG);
+	}
+	
+	public int lastblue() {
+		return (lastTxB);
+	}
+	
 	public boolean isdone() throws Exception{
 		return(done);
 	}
@@ -40,12 +63,16 @@ public class FrameGenerator {
          tempframe[(i*3)+1]=(byte)green;
          tempframe[(i*3)+2]=(byte)blue;
       }
-
+      
       return(tempframe); //return byte array for display
    }
 	
 	public boolean snap(int red1, int green1, int blue1, int num_pixels) throws Exception {
 		if(done) {
+			lastTxR=red1;
+		    lastTxG=green1;
+		    lastTxB=blue1;
+		    
 			thisred = red1;
 		    thisgreen = green1;
 		    thisblue = blue1;
@@ -62,6 +89,10 @@ public class FrameGenerator {
    	public boolean fade(int red1, int green1, int blue1, int red2, int green2, int blue2, int num_steps, int num_pixels) throws Exception{
 
 	   	if(done){ // if we were done
+	   		lastTxR=red2;
+		    lastTxG=green2;
+		    lastTxB=blue2;
+		    
 	      thisred = red1;
 	      thisgreen = green1;
 	      thisblue = blue1;
@@ -141,6 +172,10 @@ public class FrameGenerator {
    	public boolean sweep(int red1, int green1, int blue1, int red2, int green2, int blue2, int num_steps, int num_pixels, boolean dir) throws Exception{
 
 	   	if(done){ // if we were done
+	   		lastTxR=red2;
+		    lastTxG=green2;
+		    lastTxB=blue2;
+		    
 	      thisred = red1;
 	      thisgreen = green1;
 	      thisblue = blue1;
