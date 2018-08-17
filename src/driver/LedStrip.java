@@ -31,8 +31,8 @@ public class LedStrip {
 		transmitting = false;
 		skt = myskt;
 		isValid = true;
-		PingWaitTime = 20000; //time in ms to wait for ping
-		AckWaitTime = 1000; //allowable time to wait for a packet ACK
+		PingWaitTime = 10000; //time in ms to wait for ping
+		AckWaitTime = 1500; //allowable time to wait for a packet ACK
 
 		in = new BufferedReader(new InputStreamReader(skt.getInputStream())); // create input 'file'
 		dater = new DataOutputStream(skt.getOutputStream());
@@ -68,8 +68,9 @@ public class LedStrip {
 		if (isValid == true) {
 			
 			try {
-				dater.write(internalbuffer); // Send the internal buffered frame to the RXsocket
-				dater.flush();
+				Runnable multiThreadTheTCP = new SocketThread(dater, internalbuffer);
+				multiThreadTheTCP.run();
+				dater.flush(); // We hope that this will crash if the socket's dead.
 			} catch(IOException e) {
 				//kill socket, flag as invalid
 				System.out.println("Threw IOException! (Probably writing to a dead socket)");

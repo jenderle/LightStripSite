@@ -1,7 +1,5 @@
 package driver;
 
-import java.net.Socket;
-
 public class FrameGenerator {
 
 	byte[] buffer;

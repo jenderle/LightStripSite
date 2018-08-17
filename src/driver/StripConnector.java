@@ -16,6 +16,12 @@ public class StripConnector implements Runnable {
 	private ArrayList<LedStrip> mainstriplist;
 	private ServerSocket myserver;
 	
+	private long OPCODE_TIMEOUT = 7000;
+	private long DROP_TIMEOUT = 14000;
+	
+	private String numberpattern = "(\\d)+";
+	private String wordpattern = "([A-Z])\\w+";
+	
 	public StripConnector(ArrayList<LedStrip> mainstriplist, ServerSocket myserver) {
 		this.mainstriplist = mainstriplist;
 		this.myserver = myserver;
@@ -39,7 +45,9 @@ public class StripConnector implements Runnable {
 				System.out.println("Client connected Buff = 100.");
 		
 				in = new BufferedReader(new InputStreamReader(tempskt.getInputStream())); // create input 'file'
-		
+				
+				
+		//=============== OLDCODELIVESBELOW ==========================//
 				while (!in.ready()) {
 		         // we got some data from the client
 		         
@@ -47,8 +55,9 @@ public class StripConnector implements Runnable {
 				String myping = in.readLine();
 				System.out.println("Received ping: " + myping);
 				
-				String pattern = "(\\d)+";
-		        Pattern r = Pattern.compile(pattern);
+				
+				
+		        Pattern r = Pattern.compile(numberpattern);
 		        Matcher m = r.matcher(myping);
 		
 		        if (m.find( )) {
@@ -72,5 +81,40 @@ public class StripConnector implements Runnable {
 			System.out.println("StripConnector broke. Exception message: ");
 			e.printStackTrace(System.out);
 		}
+	}
+	
+	private String waitfordevicecode() throws Exception{
+		String returnstring = new String();
+		
+		Date timeoutdate = new Date(); // Start counting ms for timeout
+		long start_timeout_time = timeoutdate.getTime();
+		boolean GotGood = false;
+		
+		while((timeoutdate.getTime() < (start_timeout_time+OPCODE_TIMEOUT)&&GotGood == false)) { //Wait until we got a good one or we timed out
+			if(in.ready()) {
+				String temp_toparse = in.readLine();
+				
+				Pattern r = Pattern.compile(wordpattern);
+		        Matcher opcodematcher = r.matcher(temp_toparse);
+		        Pattern s = Pattern.compile(numberpattern);
+		        Matcher numbermatcher = s.matcher(temp_toparse);
+		        
+		        if (opcodematcher.find() && numbermatcher.find()) { //we have an opcode and a number!
+		        	returnstring = temp_toparse;
+		        	GotGood = true;
+		        }
+		        
+			}
+			
+			
+			timeoutdate = new Date(); // Refresh timer
+		}
+		
+		while(in.ready()) { //Clear out any unhandled messages!
+			in.readLine();
+		}
+		
+		
+		return(returnstring);
 	}
 }

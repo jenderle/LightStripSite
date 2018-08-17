@@ -183,10 +183,14 @@ public class SampleLightServer implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			this.commsTest();
-		} catch (Exception e) {
-			e.printStackTrace();
+		while(true) {
+			try {
+				this.commsTest();
+			} catch (Exception e) {
+				// TODO - Awful.
+				System.out.println("Fatal error encountered. Attempting to recover...");
+				e.printStackTrace();
+			}
 		}
 	}
 	
